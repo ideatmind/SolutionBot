@@ -10,24 +10,26 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ChatViewModel: ViewModel() {
+class ChatViewModel : ViewModel() {
+
     private val _chatState = MutableStateFlow(ChatState())
     val chatState = _chatState.asStateFlow()
 
     fun onEvent(event: ChatUiEvent) {
-        when(event) {
+        when (event) {
             is ChatUiEvent.SendPrompt -> {
-                if(event.prompt.isNotEmpty()) {
-                    addPrompt(event.prompt,event.bitmap)
+                if (event.prompt.isNotEmpty()) {
+                    addPrompt(event.prompt, event.bitmap)
 
                     if (event.bitmap != null) {
                         getResponseWithImage(event.prompt, event.bitmap)
-                    }else {
+                    } else {
                         getResponse(event.prompt)
                     }
                 }
             }
-            is ChatUiEvent.UpdatePrompt->{
+
+            is ChatUiEvent.UpdatePrompt -> {
                 _chatState.update {
                     it.copy(prompt = event.newPrompt)
                 }
@@ -39,7 +41,7 @@ class ChatViewModel: ViewModel() {
         _chatState.update {
             it.copy(
                 chatList = it.chatList.toMutableList().apply {
-                    add(0, Chat(prompt,bitmap,true))
+                    add(0, Chat(prompt, bitmap, true))
                 },
                 prompt = "",
                 bitmap = null
@@ -47,9 +49,9 @@ class ChatViewModel: ViewModel() {
         }
     }
 
-    private fun getResponseWithImage(prompt: String, bitmap: Bitmap) {
+    private fun getResponse(prompt: String) {
         viewModelScope.launch {
-            val chat = ChatData.getResponseWithImage(prompt, bitmap)
+            val chat = ChatData.getResponse(prompt)
             _chatState.update {
                 it.copy(
                     chatList = it.chatList.toMutableList().apply {
@@ -60,9 +62,9 @@ class ChatViewModel: ViewModel() {
         }
     }
 
-    private fun getResponse(prompt: String) {
+    private fun getResponseWithImage(prompt: String, bitmap: Bitmap) {
         viewModelScope.launch {
-            val chat = ChatData.getResponse(prompt)
+            val chat = ChatData.getResponseWithImage(prompt, bitmap)
             _chatState.update {
                 it.copy(
                     chatList = it.chatList.toMutableList().apply {
