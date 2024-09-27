@@ -25,18 +25,24 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -48,6 +54,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,6 +66,8 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.example.captionsgenerator.data.getRandomColor
 import com.example.captionsgenerator.ui.theme.CaptionsGeneratorTheme
+import com.example.captionsgenerator.ui.theme.poppinsFontFamily
+import com.example.captionsgenerator.ui.theme.ubuntuFontFamily
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -83,26 +92,36 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = Color.Black
                 ) {
 
                     Scaffold(
                         topBar = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .height(35.dp)
-                                    .padding(horizontal = 16.dp)
-                            ) {
-                                Text(
-                                    modifier = Modifier
-                                        .align(Alignment.TopStart),
-                                    text = stringResource(id = R.string.app_name),
-                                    fontSize = 19.sp,
-                                    color = MaterialTheme.colorScheme.onPrimary
+                            TopAppBar(
+                                navigationIcon = {
+                                    IconButton(
+                                        onClick = {
+
+                                        }
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.logo),
+                                            contentDescription = null,
+                                            tint = Color.Unspecified
+                                        )
+                                    }
+                                },
+                                title = {
+                                    Text(
+                                        text = "Solution Bot",
+                                        fontFamily = poppinsFontFamily,
+                                        color = Color.White
+                                    )
+                                },
+                                colors = TopAppBarDefaults.topAppBarColors(
+                                    containerColor = Color.Black
                                 )
-                            }
+                            )
                         }
                     ) {
                         ChatScreen(paddingValues = it)
@@ -124,6 +143,7 @@ class MainActivity : ComponentActivity() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color.Black)
                 .padding(top = paddingValues.calculateTopPadding()),
             verticalArrangement = Arrangement.Bottom
         ) {
@@ -189,7 +209,7 @@ class MainActivity : ComponentActivity() {
                         .weight(1f)
                         .border(
                             color = Color.Cyan,
-                            shape = RoundedCornerShape(12.dp),
+                            shape = RoundedCornerShape(55.dp),
                             width = 1.dp
                         ),
                     value = chatState.prompt,
@@ -197,12 +217,20 @@ class MainActivity : ComponentActivity() {
                         chaViewModel.onEvent(ChatUiEvent.UpdatePrompt(it))
                     },
                     placeholder = {
-                        Text(text = "Type a prompt", overflow = TextOverflow.Ellipsis)
+                        Text(
+                            text = "Type a prompt",
+                            overflow = TextOverflow.Ellipsis,
+                            color = Color.White,
+                            fontFamily = ubuntuFontFamily
+                        )
                     },
                     maxLines = 7,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = Color.Transparent, // Set to transparent to avoid double border
-                        unfocusedBorderColor = Color.Transparent // Set to transparent to avoid double border
+                        unfocusedBorderColor = Color.Transparent ,
+                        unfocusedTextColor = Color.White,
+                        focusedTextColor = Color.White,
+                        selectionColors = TextSelectionColors(Color.White,Color.Black)
                     )
                 )
 
@@ -227,59 +255,6 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun UserChatItem(prompt: String, bitmap: Bitmap?) {
-        Column(
-            modifier = Modifier.padding(start = 100.dp, bottom = 16.dp)
-        ) {
-
-            bitmap?.let {
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(260.dp)
-                        .padding(bottom = 2.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentDescription = "image",
-                    contentScale = ContentScale.Crop,
-                    bitmap = it.asImageBitmap()
-                )
-            }
-
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.primary)
-                    .padding(16.dp),
-                text = prompt,
-                fontSize = 17.sp,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-
-        }
-    }
-
-    @Composable
-    fun ModelChatItem(response: String) {
-        val background = getRandomColor()
-        Column(
-            modifier = Modifier.padding(end = 100.dp, bottom = 16.dp)
-        ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(background)
-                    .padding(16.dp),
-                text = response,
-                fontSize = 17.sp,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-
-        }
-    }
-
-    @Composable
     private fun getBitmap(): Bitmap? {
         val uri = uriState.collectAsState().value
 
@@ -296,6 +271,7 @@ class MainActivity : ComponentActivity() {
 
         return null
     }
+
 }
 
 
