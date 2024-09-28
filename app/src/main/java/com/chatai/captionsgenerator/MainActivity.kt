@@ -2,6 +2,7 @@ package com.chatai.captionsgenerator
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.PickVisualMediaRequest
@@ -128,6 +129,7 @@ class MainActivity : ComponentActivity() {
     fun ChatScreen(paddingValues: PaddingValues) {
         val chaViewModel = viewModel<ChatViewModel>()
         val chatState = chaViewModel.chatState.collectAsState().value
+        val context = LocalContext.current
 
         val bitmap = getBitmap()
 
@@ -210,7 +212,7 @@ class MainActivity : ComponentActivity() {
                     },
                     placeholder = {
                         Text(
-                            text = "Type a prompt",
+                            text = "Type a message",
                             overflow = TextOverflow.Ellipsis,
                             color = Color.White,
                             fontFamily = ubuntuFontFamily
@@ -225,15 +227,18 @@ class MainActivity : ComponentActivity() {
                         selectionColors = TextSelectionColors(Color.White,Color.Black)
                     )
                 )
-
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Icon(
                     modifier = Modifier
                         .size(40.dp)
                         .clickable {
-                            chaViewModel.onEvent(ChatUiEvent.SendPrompt(chatState.prompt, bitmap))
-                            uriState.update { "" }
+                            if (chatState.prompt.isEmpty()) {
+                                Toast.makeText(context, "Empty message", Toast.LENGTH_SHORT).show()
+                            } else {
+                                chaViewModel.onEvent(ChatUiEvent.SendPrompt(chatState.prompt, bitmap))
+                                uriState.update { "" }
+                            }
                         },
                     imageVector = Icons.Rounded.Send,
                     contentDescription = "Send prompt",
