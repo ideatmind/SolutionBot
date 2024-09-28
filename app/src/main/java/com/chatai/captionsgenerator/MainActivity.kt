@@ -166,7 +166,11 @@ class MainActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Column {
+                Column(
+                    Modifier.clickable {
+                        uriState.update { "" }
+                    }
+                ) {
                     bitmap?.let {
                         Image(
                             modifier = Modifier
