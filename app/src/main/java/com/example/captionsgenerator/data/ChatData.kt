@@ -42,7 +42,7 @@ object ChatData {
         try {
             val inputContent = content {
                 image(bitmap)
-//                mutableListOf(image(bitmap))
+                mutableListOf(image(bitmap))
                 text(prompt)
             }
             val response = withContext(Dispatchers.IO) {

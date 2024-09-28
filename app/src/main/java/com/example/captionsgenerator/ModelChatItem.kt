@@ -11,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.text.selection.SelectionContainer
 import com.example.captionsgenerator.data.getRandomColor
 import com.example.captionsgenerator.ui.theme.poppinsFontFamily
 
@@ -22,17 +24,20 @@ fun ModelChatItem(response: String) {
     Column(
         modifier = Modifier.padding(end = 100.dp, bottom = 16.dp)
     ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .background(background)
-                .padding(16.dp),
-            text = response,
-            fontFamily = poppinsFontFamily,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium
-        )
-
+        SelectionContainer {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(background)
+                    .padding(16.dp),
+                text = response,
+                fontFamily = poppinsFontFamily,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 10
+            )
+        }
     }
 }
