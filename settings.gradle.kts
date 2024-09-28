@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Captions Generator"
+rootProject.name = "Solution Bot"
 include(":app")

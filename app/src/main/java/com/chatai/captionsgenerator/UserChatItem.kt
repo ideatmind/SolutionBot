@@ -1,4 +1,4 @@
-package com.example.captionsgenerator
+package com.chatai.captionsgenerator
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
@@ -18,7 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.captionsgenerator.ui.theme.poppinsFontFamily
+import com.chatai.captionsgenerator.ui.theme.poppinsFontFamily
 
 @Composable
 fun UserChatItem(prompt: String, bitmap: Bitmap?) {

@@ -1,4 +1,4 @@
-package com.example.captionsgenerator
+package com.chatai.captionsgenerator
 
 import android.graphics.Bitmap
 

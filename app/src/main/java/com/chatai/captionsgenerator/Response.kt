@@ -1,4 +1,4 @@
-package com.example.captionsgenerator
+package com.chatai.captionsgenerator
 
 sealed interface Response<out T> {
     data object Idle: Response<Nothing>

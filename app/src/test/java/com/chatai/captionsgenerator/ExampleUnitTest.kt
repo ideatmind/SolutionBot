@@ -1,4 +1,4 @@
-package com.example.captionsgenerator
+package com.chatai.captionsgenerator
 
 import org.junit.Test
 

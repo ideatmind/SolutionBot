@@ -1,4 +1,4 @@
-package com.example.captionsgenerator
+package com.chatai.captionsgenerator
 
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -55,9 +56,9 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
-import com.example.captionsgenerator.ui.theme.CaptionsGeneratorTheme
-import com.example.captionsgenerator.ui.theme.poppinsFontFamily
-import com.example.captionsgenerator.ui.theme.ubuntuFontFamily
+import com.chatai.captionsgenerator.ui.theme.CaptionsGeneratorTheme
+import com.chatai.captionsgenerator.ui.theme.poppinsFontFamily
+import com.chatai.captionsgenerator.ui.theme.ubuntuFontFamily
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -134,7 +135,8 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black)
-                .padding(top = paddingValues.calculateTopPadding()),
+                .padding(top = paddingValues.calculateTopPadding())
+                .imePadding(), // Add this line to handle keyboard insets
             verticalArrangement = Arrangement.Bottom
         ) {
             LazyColumn(
@@ -263,20 +265,3 @@ class MainActivity : ComponentActivity() {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

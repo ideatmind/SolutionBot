@@ -1,7 +1,7 @@
-package com.example.captionsgenerator
+package com.chatai.captionsgenerator
 
 import android.graphics.Bitmap
-import com.example.captionsgenerator.data.Chat
+import com.chatai.captionsgenerator.data.Chat
 
 data class ChatState(
     val chatList: MutableList<Chat> = mutableListOf(),

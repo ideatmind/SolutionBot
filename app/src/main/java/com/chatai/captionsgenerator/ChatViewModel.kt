@@ -1,10 +1,10 @@
-package com.example.captionsgenerator
+package com.chatai.captionsgenerator
 
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.captionsgenerator.data.Chat
-import com.example.captionsgenerator.data.ChatData
+import com.chatai.captionsgenerator.data.Chat
+import com.chatai.captionsgenerator.data.ChatData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

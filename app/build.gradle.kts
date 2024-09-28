@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.captionsgenerator"
+    namespace = "com.chatai.captionsgenerator"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.captionsgenerator"
+        applicationId = "com.chatai.captionsgenerator"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

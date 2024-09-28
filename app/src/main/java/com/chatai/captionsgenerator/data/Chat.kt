@@ -1,4 +1,4 @@
-package com.example.captionsgenerator.data
+package com.chatai.captionsgenerator.data
 
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.Color
