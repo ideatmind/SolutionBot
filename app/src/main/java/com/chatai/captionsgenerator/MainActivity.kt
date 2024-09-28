@@ -151,7 +151,10 @@ class MainActivity : ComponentActivity() {
                 itemsIndexed(chatState.chatList) { index, chat ->
                     if (chat.isFromUser) {
                         UserChatItem(
-                            prompt = chat.prompt, bitmap = chat.bitmap
+                            prompt = chat.prompt, bitmap = chat.bitmap,
+                            onClick = {
+                                chaViewModel.onEvent(ChatUiEvent.CopyPrompt(chat.prompt,chat.bitmap))
+                            }
                         )
                     } else {
                         ModelChatItem(response = chat.prompt)
@@ -238,9 +241,16 @@ class MainActivity : ComponentActivity() {
                         .size(40.dp)
                         .clickable {
                             if (chatState.prompt.isEmpty()) {
-                                Toast.makeText(context, "Empty message", Toast.LENGTH_SHORT).show()
+                                Toast
+                                    .makeText(context, "Empty message", Toast.LENGTH_SHORT)
+                                    .show()
                             } else {
-                                chaViewModel.onEvent(ChatUiEvent.SendPrompt(chatState.prompt, bitmap))
+                                chaViewModel.onEvent(
+                                    ChatUiEvent.SendPrompt(
+                                        chatState.prompt,
+                                        bitmap
+                                    )
+                                )
                                 uriState.update { "" }
                             }
                         },

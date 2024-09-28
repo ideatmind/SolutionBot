@@ -3,6 +3,7 @@ package com.chatai.captionsgenerator
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,9 +22,9 @@ import androidx.compose.ui.unit.sp
 import com.chatai.captionsgenerator.ui.theme.poppinsFontFamily
 
 @Composable
-fun UserChatItem(prompt: String, bitmap: Bitmap?) {
+fun UserChatItem(prompt: String, bitmap: Bitmap?, onClick:()->Unit) {
     Column(
-        modifier = Modifier.padding(start = 100.dp, bottom = 16.dp)
+        modifier = Modifier.padding(start = 100.dp, bottom = 16.dp).clickable { onClick() }
     ) {
 
         bitmap?.let {

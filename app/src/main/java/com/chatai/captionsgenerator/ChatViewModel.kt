@@ -34,6 +34,12 @@ class ChatViewModel : ViewModel() {
                     it.copy(prompt = event.newPrompt)
                 }
             }
+
+            is ChatUiEvent.CopyPrompt -> {
+                _chatState.update {
+                    it.copy(prompt = event.prompt, bitmap = event.bitmap)
+                }
+            }
         }
     }
 
