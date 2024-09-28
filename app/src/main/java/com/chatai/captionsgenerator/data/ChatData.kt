@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 object ChatData {
+
     private const val api_key = "AIzaSyBb29lQ49kbmOOwXW-6GtEaFqxs7-OM5ss"
 
     suspend fun getResponse(prompt: String): Chat {

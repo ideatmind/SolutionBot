@@ -1,3 +1,4 @@
+
 package com.chatai.captionsgenerator
 
 import android.graphics.Bitmap
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -81,7 +83,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CaptionsGeneratorTheme() {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Black
@@ -138,7 +139,7 @@ class MainActivity : ComponentActivity() {
                 .fillMaxSize()
                 .background(Color.Black)
                 .padding(top = paddingValues.calculateTopPadding())
-                .imePadding(), // Add this line to handle keyboard insets
+                .imePadding(),
             verticalArrangement = Arrangement.Bottom
         ) {
             LazyColumn(
@@ -162,6 +163,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+            Spacer(Modifier.height(6.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -227,7 +229,7 @@ class MainActivity : ComponentActivity() {
                     },
                     maxLines = 7,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color.Transparent, // Set to transparent to avoid double border
+                        focusedBorderColor = Color.Transparent,
                         unfocusedBorderColor = Color.Transparent ,
                         unfocusedTextColor = Color.White,
                         focusedTextColor = Color.White,

@@ -63,4 +63,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
     implementation("io.coil-kt:coil-compose:2.4.0")
 //    implementation("androidx.compose.material:matarial-icons-extended:1.5.4")
+
+        implementation ("com.valentinilk.shimmer:compose-shimmer:1.0.3")
+
+
 }

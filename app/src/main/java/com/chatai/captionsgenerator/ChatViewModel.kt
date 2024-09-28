@@ -15,6 +15,9 @@ class ChatViewModel : ViewModel() {
     private val _chatState = MutableStateFlow(ChatState())
     val chatState = _chatState.asStateFlow()
 
+    private val _responseState = MutableStateFlow<Response<List<Chat>>>(Response.Idle)
+    val responseState = _responseState.asStateFlow()
+
     fun onEvent(event: ChatUiEvent) {
         when (event) {
             is ChatUiEvent.SendPrompt -> {
@@ -57,26 +60,38 @@ class ChatViewModel : ViewModel() {
 
     private fun getResponse(prompt: String) {
         viewModelScope.launch {
-            val chat = ChatData.getResponse(prompt)
-            _chatState.update {
-                it.copy(
-                    chatList = it.chatList.toMutableList().apply {
-                        add(0, chat)
-                    }
-                )
+            _responseState.value = Response.Loading
+            try {
+                val chat = ChatData.getResponse(prompt)
+                _chatState.update {
+                    it.copy(
+                        chatList = it.chatList.toMutableList().apply {
+                            add(0, chat)
+                        }
+                    )
+                }
+                _responseState.value = Response.Success(_chatState.value.chatList)
+            } catch (e: Exception) {
+                _responseState.value = Response.Error(e)
             }
         }
     }
 
     private fun getResponseWithImage(prompt: String, bitmap: Bitmap) {
         viewModelScope.launch {
-            val chat = ChatData.getResponseWithImage(prompt, bitmap)
-            _chatState.update {
-                it.copy(
-                    chatList = it.chatList.toMutableList().apply {
-                        add(0, chat)
-                    }
-                )
+            _responseState.value = Response.Loading
+            try {
+                val chat = ChatData.getResponseWithImage(prompt, bitmap)
+                _chatState.update {
+                    it.copy(
+                        chatList = it.chatList.toMutableList().apply {
+                            add(0, chat)
+                        }
+                    )
+                }
+                _responseState.value = Response.Success(_chatState.value.chatList)
+            } catch (e: Exception) {
+                _responseState.value = Response.Error(e)
             }
         }
     }
