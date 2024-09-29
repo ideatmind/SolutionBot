@@ -221,7 +221,7 @@ class MainActivity : ComponentActivity() {
                     },
                     placeholder = {
                         Text(
-                            text = "Type a message",
+                            text = "Ask me anything...\uD83D\uDE03",
                             overflow = TextOverflow.Ellipsis,
                             color = Color.White,
                             fontFamily = ubuntuFontFamily
