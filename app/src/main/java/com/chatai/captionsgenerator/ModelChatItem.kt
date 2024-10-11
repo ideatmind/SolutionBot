@@ -22,7 +22,7 @@ import com.chatai.captionsgenerator.ui.theme.poppinsFontFamily
 fun ModelChatItem(response: String) {
     val background = getRandomColor()
     Column(
-        modifier = Modifier.padding(end = 100.dp, bottom = 16.dp)
+        modifier = Modifier.padding(end = 60.dp, bottom = 16.dp)
     ) {
         SelectionContainer {
             Text(

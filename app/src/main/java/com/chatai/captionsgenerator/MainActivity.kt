@@ -13,6 +13,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -46,6 +47,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -84,8 +87,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CaptionsGeneratorTheme() {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color.Black
+                    modifier = Modifier.fillMaxSize()
                 ) {
 
                     Scaffold(
@@ -98,9 +100,10 @@ class MainActivity : ComponentActivity() {
                                         }
                                     ) {
                                         Icon(
-                                            painter = painterResource(R.drawable.logo),
+                                            painter = painterResource(R.drawable.new_logo),
                                             contentDescription = null,
-                                            tint = Color.Unspecified
+                                            tint = Color.Unspecified,
+                                            modifier = Modifier.size(100.dp)
                                         )
                                     }
                                 },
@@ -108,11 +111,11 @@ class MainActivity : ComponentActivity() {
                                     Text(
                                         text = "Solution Bot",
                                         fontFamily = poppinsFontFamily,
-                                        color = Color.White
+                                        color = Color.Black
                                     )
                                 },
                                 colors = TopAppBarDefaults.topAppBarColors(
-                                    containerColor = Color.Black
+                                    containerColor = Color.White
                                 )
                             )
                         }
@@ -133,138 +136,150 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
 
         val bitmap = getBitmap()
-
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black)
-                .padding(top = paddingValues.calculateTopPadding())
-                .imePadding(),
-            verticalArrangement = Arrangement.Bottom
+                .paint(painterResource(id = R.drawable.new_logo),
+                    contentScale = ContentScale.Inside)
         ) {
-            LazyColumn(
+            Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                reverseLayout = true
+                    .fillMaxSize()
+                    .background(Color.Transparent)
+                    .padding(top = paddingValues.calculateTopPadding())
+                    .imePadding(),
+                verticalArrangement = Arrangement.Bottom
             ) {
-                itemsIndexed(chatState.chatList) { index, chat ->
-                    if (chat.isFromUser) {
-                        UserChatItem(
-                            prompt = chat.prompt, bitmap = chat.bitmap,
-                            onClick = {
-                                chaViewModel.onEvent(ChatUiEvent.CopyPrompt(chat.prompt,chat.bitmap))
-                            }
-                        )
-                    } else {
-                        ModelChatItem(response = chat.prompt)
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    reverseLayout = true
+                ) {
+                    itemsIndexed(chatState.chatList) { index, chat ->
+                        if (chat.isFromUser) {
+                            UserChatItem(
+                                prompt = chat.prompt,
+                                bitmap = chat.bitmap,
+                                onClick = {
+                                    chaViewModel.onEvent(
+                                        ChatUiEvent.CopyPrompt(
+                                            chat.prompt,
+                                            chat.bitmap
+                                        )
+                                    )
+                                }
+                            )
+                        } else {
+                            ModelChatItem(response = chat.prompt)
+                        }
                     }
                 }
-            }
 
-            Spacer(Modifier.height(6.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp, start = 4.dp, end = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
 
-                Column(
-                    Modifier.clickable {
-                        uriState.update { "" }
-                    }
+                Spacer(Modifier.height(6.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp, start = 4.dp, end = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    bitmap?.let {
-                        Image(
+
+                    Column(
+                        Modifier.clickable {
+                            uriState.update { "" }
+                        }
+                    ) {
+                        bitmap?.let {
+                            Image(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .padding(bottom = 2.dp)
+                                    .clip(RoundedCornerShape(6.dp)),
+                                contentDescription = "picked image",
+                                contentScale = ContentScale.Crop,
+                                bitmap = it.asImageBitmap()
+                            )
+                        }
+
+                        Icon(
                             modifier = Modifier
                                 .size(40.dp)
-                                .padding(bottom = 2.dp)
-                                .clip(RoundedCornerShape(6.dp)),
-                            contentDescription = "picked image",
-                            contentScale = ContentScale.Crop,
-                            bitmap = it.asImageBitmap()
+                                .clickable {
+                                    imagePicker.launch(
+                                        PickVisualMediaRequest
+                                            .Builder()
+                                            .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                            .build()
+                                    )
+                                },
+                            painter = painterResource(R.drawable.addphoto),
+                            contentDescription = "Add Photo",
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .weight(1f)
+                            .border(
+                                color = Color.Cyan,
+                                shape = RoundedCornerShape(55.dp),
+                                width = 1.dp
+                            ),
+                        value = chatState.prompt,
+                        onValueChange = {
+                            chaViewModel.onEvent(ChatUiEvent.UpdatePrompt(it))
+                        },
+                        placeholder = {
+                            Text(
+                                text = "Ask me anything...\uD83D\uDE03",
+                                overflow = TextOverflow.Ellipsis,
+                                color = Color.Black,
+                                fontFamily = ubuntuFontFamily
+                            )
+                        },
+                        maxLines = 7,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedBorderColor = Color.Transparent,
+                            unfocusedTextColor = Color.Black,
+                            focusedTextColor = Color.Black,
+                            selectionColors = TextSelectionColors(Color.Black, Color.White)
+                        )
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
 
                     Icon(
                         modifier = Modifier
                             .size(40.dp)
                             .clickable {
-                                imagePicker.launch(
-                                    PickVisualMediaRequest
-                                        .Builder()
-                                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                        .build()
-                                )
+                                if (chatState.prompt.isEmpty()) {
+                                    Toast
+                                        .makeText(context, "Empty message", Toast.LENGTH_SHORT)
+                                        .show()
+                                } else {
+                                    chaViewModel.onEvent(
+                                        ChatUiEvent.SendPrompt(
+                                            chatState.prompt,
+                                            bitmap
+                                        )
+                                    )
+                                    uriState.update { "" }
+                                }
                             },
-                        painter = painterResource(R.drawable.addphoto),
-                        contentDescription = "Add Photo",
+                        imageVector = Icons.Rounded.Send,
+                        contentDescription = "Send prompt",
                         tint = MaterialTheme.colorScheme.primary
                     )
+
                 }
 
-                Spacer(modifier = Modifier.width(8.dp))
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .weight(1f)
-                        .border(
-                            color = Color.Cyan,
-                            shape = RoundedCornerShape(55.dp),
-                            width = 1.dp
-                        ),
-                    value = chatState.prompt,
-                    onValueChange = {
-                        chaViewModel.onEvent(ChatUiEvent.UpdatePrompt(it))
-                    },
-                    placeholder = {
-                        Text(
-                            text = "Ask me anything...\uD83D\uDE03",
-                            overflow = TextOverflow.Ellipsis,
-                            color = Color.White,
-                            fontFamily = ubuntuFontFamily
-                        )
-                    },
-                    maxLines = 7,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent ,
-                        unfocusedTextColor = Color.White,
-                        focusedTextColor = Color.White,
-                        selectionColors = TextSelectionColors(Color.White,Color.Black)
-                    )
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Icon(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clickable {
-                            if (chatState.prompt.isEmpty()) {
-                                Toast
-                                    .makeText(context, "Empty message", Toast.LENGTH_SHORT)
-                                    .show()
-                            } else {
-                                chaViewModel.onEvent(
-                                    ChatUiEvent.SendPrompt(
-                                        chatState.prompt,
-                                        bitmap
-                                    )
-                                )
-                                uriState.update { "" }
-                            }
-                        },
-                    imageVector = Icons.Rounded.Send,
-                    contentDescription = "Send prompt",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-
             }
-
         }
-
     }
 
     @Composable
